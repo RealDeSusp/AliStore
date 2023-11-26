@@ -42,6 +42,5 @@ class Characteristic(models.Model):
 
 
 class ProductCharacteristics(models.Model):
-    product = models.ForeignKey('Product', on_delete=models.CASCADE)
+    category = models.ForeignKey('Category', on_delete=models.CASCADE)
     characteristic = models.ForeignKey('Characteristic', on_delete=models.CASCADE)
-    value = models.CharField(max_length=255)
