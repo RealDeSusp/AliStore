@@ -8,6 +8,7 @@ class Product(models.Model):
     # this category will also be deleted
     category = models.ForeignKey('Category', on_delete=models.CASCADE)
     manufacturer = models.ForeignKey('Manufacturer', on_delete=models.CASCADE)
+    characteristic = models.ManyToManyField('Characteristic')
 
     def __str__(self):
         return self.name
@@ -16,7 +17,15 @@ class Product(models.Model):
 class Category(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
-    parent_category = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE)
+    parentcategory = models.ForeignKey('ParentCategory', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+
+
+class ParentCategory(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255)
 
     def __str__(self):
         return self.name
@@ -40,8 +49,6 @@ class Characteristic(models.Model):
         (SECONDARY, 'Secondary'),
     ]
     type = models.CharField(max_length=20, choices=TYPE_CHOICES)
-    values = models.TextField()
-    category = models.ForeignKey('Category', on_delete=models.CASCADE, related_name='characteristics')
 
     def __str__(self):
         return self.name
