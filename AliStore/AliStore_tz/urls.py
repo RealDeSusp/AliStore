@@ -1,7 +1,7 @@
 from django.urls import path, include
-from .views import CustomProductAPIView, base_view
+from .views import CategoryAPIView, base_view
 
 urlpatterns = [
-    path('api/products/<int:category_id>/', CustomProductAPIView.as_view(), name='custom-product-list'),
+    path('', CategoryAPIView.as_view()),
     path('', base_view, name='base'),
 ]
