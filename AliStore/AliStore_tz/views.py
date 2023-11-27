@@ -1,29 +1,32 @@
 from django.shortcuts import render
 from rest_framework.response import Response
-from rest_framework.generics import ListAPIView
-from rest_framework.pagination import PageNumberPagination
-from .models import Product
-from .serializers import PaginatedProductSerializer
+from rest_framework.views import APIView
+from .models import Product, ProductCharacteristics
 
 
-class ProductListAPIView(ListAPIView):
-    serializer_class = PaginatedProductSerializer
-    pagination_class = PageNumberPagination
+class CustomProductAPIView(APIView):
+    def get(self, request, category_id):
+        products = Product.objects.filter(category__id=category_id)
+        data = []
 
-    def get_queryset(self):
-        category_id = self.kwargs.get('category_id')
-        return Product.objects.filter(category__identifier=category_id)
+        for product in products:
+            product_data = {
+                'name': product.name,
+                'characteristics': []
+            }
 
-    def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        page = self.paginate_queryset(queryset)
+            primary_characteristics = product.characteristics.filter(characteristic__category__type='Primary')
 
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
+            for pc in primary_characteristics:
+                characteristic_data = {
+                    'name': pc.characteristic.name,
+                    'value': pc.value
+                }
+                product_data['characteristics'].append(characteristic_data)
 
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
+            data.append(product_data)
+
+        return Response(data)
 
 
 def base_view(request):
