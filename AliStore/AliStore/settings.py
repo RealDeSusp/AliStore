@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'AliStore_tz.apps.AlistoreTzConfig',
     'rest_framework',
-    'django_seed',
 ]
 
 MIDDLEWARE = [
