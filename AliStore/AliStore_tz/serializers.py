@@ -1,8 +1,8 @@
 from rest_framework import serializers
-from .models import Category
+from .models import Product, Characteristic
 
 
-class CategorySerializer(serializers.ModelSerializer):
+class ProductSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Category
-        fields = ('name', 'parent_category')
+        model = (Product, Characteristic)
+        fields = Product.name
