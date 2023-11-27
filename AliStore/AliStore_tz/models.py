@@ -7,6 +7,10 @@ class Product(models.Model):
     category = models.ForeignKey('Category', on_delete=models.CASCADE)
     manufacturer = models.ForeignKey('Manufacturer', on_delete=models.CASCADE)
 
+    def get_primary_characteristics(self):
+        primary_characteristics = self.characteristics.filter(type='Primary')
+        return PrimaryCharacteristicSerializer(primary_characteristics, many=True).data
+
 
 class Category(models.Model):
     identifier = models.AutoField(primary_key=True)

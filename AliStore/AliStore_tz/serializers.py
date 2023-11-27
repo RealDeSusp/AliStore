@@ -1,24 +1,23 @@
 from rest_framework import serializers
-from .models import Product, ProductCharacteristics, Characteristic
+from .models import Product, Characteristic, ProductCharacteristics
 
 
-class CharacteristicSerializer(serializers.ModelSerializer):
+class PrimaryCharacteristicSerializer(serializers.ModelSerializer):
     class Meta:
         model = Characteristic
-        fields = ['name', 'type', 'values']
-
-
-class ProductCharacteristicsSerializer(serializers.ModelSerializer):
-    characteristic = CharacteristicSerializer()
-
-    class Meta:
-        model = ProductCharacteristics
-        fields = ['characteristic', 'value']
+        fields = ('name', 'value')
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    product_characteristics = ProductCharacteristicsSerializer(source='productcharacteristics_set', many=True, read_only=True)
+    primary_characteristics = PrimaryCharacteristicSerializer(many=True, read_only=True, source='get_primary_characteristics')
 
     class Meta:
         model = Product
-        fields = ['name', 'product_characteristics']
+        fields = ('name', 'primary_characteristics')
+
+
+class PaginatedProductSerializer(serializers.Serializer):
+    count = serializers.IntegerField()
+    next = serializers.CharField(allow_blank=True)
+    previous = serializers.CharField(allow_blank=True)
+    results = ProductSerializer(many=True)
