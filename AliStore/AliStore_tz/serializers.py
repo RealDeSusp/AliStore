@@ -20,4 +20,11 @@ class PaginatedProductSerializer(serializers.Serializer):
     count = serializers.IntegerField()
     next = serializers.CharField(allow_blank=True)
     previous = serializers.CharField(allow_blank=True)
-    results = ProductSerializer(many=True, read_only=True, instance=page)
+    results = ProductSerializer(many=True)
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        queryset = self.context['request'].data['results']
+        serializer = ProductSerializer(instance=queryset, many=True)
+        data['results'] = serializer.data
+        return data
