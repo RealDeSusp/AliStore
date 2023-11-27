@@ -12,7 +12,7 @@ class ProductListAPIView(ListAPIView):
 
     def get_queryset(self):
         category_id = self.kwargs.get('category_id')
-        return Product.objects.filter(category=category_id)
+        return Product.objects.filter(category__identifier=category_id)
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()

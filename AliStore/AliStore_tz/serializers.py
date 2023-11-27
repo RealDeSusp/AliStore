@@ -20,4 +20,4 @@ class PaginatedProductSerializer(serializers.Serializer):
     count = serializers.IntegerField()
     next = serializers.CharField(allow_blank=True)
     previous = serializers.CharField(allow_blank=True)
-    results = ProductSerializer(many=True)
+    results = ProductSerializer(many=True, read_only=True, instance=page)

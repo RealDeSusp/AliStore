@@ -37,5 +37,9 @@ class Characteristic(models.Model):
 
 class ProductCharacteristics(models.Model):
     characteristic = models.ForeignKey('Characteristic', on_delete=models.CASCADE)
-    product = models.ForeignKey('Product', on_delete=models.CASCADE)
+    product = models.ForeignKey('Product', on_delete=models.CASCADE, related_name='characteristics')
     value = models.CharField(max_length=255)
+    
+    def get_primary_characteristics(self):
+        primary_characteristics = self.characteristic.filter(type='Primary')
+        return PrimaryCharacteristicSerializer(primary_characteristics, many=True).data
